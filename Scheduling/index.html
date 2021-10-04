@@ -84,7 +84,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#updating-faraday" class="md-skip">
+        <a href="#scheduling" class="md-skip">
           Skip to content
         </a>
       
@@ -944,8 +944,6 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
-        
-      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
           Scheduling
@@ -961,8 +959,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -971,8 +967,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#updating-from-faraday-v381-or-lower" class="md-nav__link">
-    Updating from Faraday v3.8.1 or lower
+  <a href="#scheduling" class="md-nav__link">
+    Scheduling
   </a>
   
 </li>
@@ -1729,8 +1725,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -1739,8 +1733,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#updating-from-faraday-v381-or-lower" class="md-nav__link">
-    Updating from Faraday v3.8.1 or lower
+  <a href="#scheduling" class="md-nav__link">
+    Scheduling
   </a>
   
 </li>
@@ -1762,33 +1756,68 @@
                   </a>
                 
                 
-                <h1 id="updating-faraday">Updating Faraday<a class="headerlink" href="#updating-faraday" title="Permanent link">&para;</a></h1>
-<p>Faraday will be installed as a service if you use .deb or .rpm. </p>
-<div class="admonition info">
-<p>If you're updating from Faraday v3.8.1 or lower, follow the instructions specified in the last section of this article. Once you're done, you can proceed with the <a href="#updating-from-faraday-v381-or-lower">instructions below</a>.</p>
-</div>
-<p><strong>To update Faraday, please follow these instructions:</strong></p>
-<p>Download the latest .deb or .rpm Faraday Server Installer<br />
-<strong>Professional/Corporate</strong> version from the <a href="https://portal.faradaysec.com/">Faraday Portal</a> <br />
-Community version from our <a href="https://github.com/infobyte/faraday/releases">GitHub</a></p>
-<p>Run:
-<div class="highlight"><pre><span></span><code>sudo service faraday-server stop
+                  <h1>Scheduling</h1>
+                
+                <h2 id="scheduling">Scheduling<a class="headerlink" href="#scheduling" title="Permanent link">&para;</a></h2>
+<p>In order to arrange or plan an event to take place at a particular time we've created Scheduling, it will allow to use the POSIX local format, the execution will be made by an <strong>agent</strong>.</p>
+<p>To configure an schedule click on Operations and then click on schedule, to do a new schedule click on the new button.</p>
+<p><img alt="" src="/images/scheduling/scheduling_1.png" /></p>
+<p>Provide a description, interval pattern and click on the ok button.</p>
+<p><img alt="" src="/images/scheduling/scheduling_2.png" /></p>
+<p>The POSIX cron format is the below:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Possible Values</th>
+<th>Syntax</th>
+<th>Description</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a - Minute</td>
+<td>0-59</td>
+<td>7 * <em> * </em></td>
+<td>The cron job is initiated every time the system clock shows 7 in the minute’s position.</td>
+<td></td>
+</tr>
+<tr>
+<td>b - Hour</td>
+<td>0-23</td>
+<td>0 7 * * *</td>
+<td>The cron job runs any time the system clock shows 7am (7pm would be coded as 19).</td>
+<td></td>
+</tr>
+<tr>
+<td>c - Day</td>
+<td>0-31</td>
+<td>0 0 7 * *</td>
+<td>The day of the month is 7 which means that the job runs every 7<sup>th</sup> day of the month.</td>
+<td></td>
+</tr>
+<tr>
+<td>d - Month</td>
+<td>0 = none and 12 = December</td>
+<td>0 0 0 7 *</td>
+<td>The numerical month is 7 which determines that the job runs only in July.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>In addition to running the agents manually with their "Run" button, you can also schedule them to run periodically. This can be done from the web if you have our <strong>Corporate/Pro version</strong>:</p>
+<p><img alt="" src="/images/agents/scheduling.png" /></p>
+<p><img alt="" src="/images/agents/scheduling_2.png" /></p>
+<p>or with simple cronjobs using faraday-cli if you are using the <strong>Community version</strong></p>
+<p>create an script.sh with this contents:</p>
+<div class="highlight"><pre><span></span><code>#!/bin/bash
+echo &#39;{&quot;target&quot;: &quot;www.google.com&quot;}&#39; | faraday-cli agent run -a 1 -e nmap --stdin
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>sudo apt install ./faraday-amd64.deb
+<p>Edit your crontab using the bellow command </p>
+<div class="highlight"><pre><span></span><code>crontab -e 
+1 0 * * 0 /pathtoyourscript/script.sh &gt; /dev/null 2&gt;&amp;1
 </code></pre></div>
-or
-<div class="highlight"><pre><span></span><code>sudo yum install ./faraday-amd64.rpm
-</code></pre></div></p>
-<p>In order for the update to work, these steps must be followed in every instance of Faraday.</p>
-<p>Once you have updated Faraday, you can take a look at Faraday Server's status by running:
-<div class="highlight"><pre><span></span><code>sudo service faraday-server status
-</code></pre></div></p>
-<h2 id="updating-from-faraday-v381-or-lower">Updating from Faraday v3.8.1 or lower<a class="headerlink" href="#updating-from-faraday-v381-or-lower" title="Permanent link">&para;</a></h2>
-<p>If you have installed Faraday v3.8.1 or lower and you want to update to Faraday's last version, you need to take into consideration the following information:</p>
-<p>As now you're able to install Faraday Server and Faraday Client from a separate installer, if you are going to use the server's installer to update Faraday, you need to uninstall the Faraday Client that you have installed in the previous versions. </p>
-<p>In order to uninstall Faraday Client, run the following command:
-<div class="highlight"><pre><span></span><code>sudo apt remove faraday-client
-</code></pre></div></p>
                 
               
               
